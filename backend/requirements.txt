@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+starlette
+python-multipart
+supabase
+pydantic
+pydantic-core
+email-validator
+annotated-types
+stripe
+httpx
+anyio
+sniffio
+python-dotenv

@@ -1,0 +1,63 @@
+# ═══════════════════════════════════════════════════
+# ROOT .gitignore — Social Footholds
+# Covers both /backend (Python) and /frontend-next (Next.js)
+# ═══════════════════════════════════════════════════
+
+# ── OS FILES ──────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ── EDITOR / IDE ──────────────────────────────────
+.vscode/
+.idea/
+*.code-workspace
+
+# ── ENV FILES (SECRETS — NEVER COMMIT) ────────────
+.env
+.env.*
+!.env.example
+
+# ── PYTHON / BACKEND ─────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+env/
+.Python
+
+# ── NODE / FRONTEND ──────────────────────────────
+node_modules/
+.next/
+out/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── BUILD ARTIFACTS ──────────────────────────────
+/coverage
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.netlify
+
+# ── TOOL-SPECIFIC (AI ASSISTANTS, ETC.) ──────────
+.emergent/
+.gemini/
+.agents/
+_agents/
