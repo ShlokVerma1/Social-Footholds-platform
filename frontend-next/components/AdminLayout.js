@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Footer from '@/components/Footer';
+import SettingsModal from '@/components/SettingsModal';
 import { FaTachometerAlt, FaUsers, FaShoppingBag, FaEnvelope, FaBlog, FaCog, FaSignOutAlt, FaShieldAlt } from 'react-icons/fa';
 
 const AdminLayout = ({ children }) => {
@@ -14,6 +15,8 @@ const AdminLayout = ({ children }) => {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [displayName, setDisplayName] = React.useState(user?.name || '');
 
   // Track scroll for navbar glassmorphism transition
   React.useEffect(() => {
@@ -21,6 +24,11 @@ const AdminLayout = ({ children }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Keep displayName in sync if user object updates
+  React.useEffect(() => {
+    if (user?.name) setDisplayName(user.name);
+  }, [user?.name]);
 
   React.useEffect(() => {
     if (!loading && (!user || user.role !== 'admin')) {
@@ -68,13 +76,17 @@ const AdminLayout = ({ children }) => {
 
             {/* Admin badge + logout */}
             <div className="flex items-center gap-4">
-              {/* Admin avatar badge */}
-              <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-purple-500/20 rounded-full px-4 py-1.5">
+              {/* Admin avatar badge — click to open settings */}
+              <button
+                onClick={() => setSettingsOpen(true)}
+                title="Account Settings"
+                className="hidden sm:flex items-center gap-3 bg-white/5 border border-purple-500/20 rounded-full px-4 py-1.5 cursor-pointer hover:bg-white/10 hover:border-purple-500/40 transition-all duration-200"
+              >
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-xs font-bold text-white">
                   <FaShieldAlt className="text-[10px]" />
                 </div>
-                <span className="text-gray-300 text-sm">Admin: <span className="text-white font-semibold">{user?.name}</span></span>
-              </div>
+                <span className="text-gray-300 text-sm">Admin: <span className="text-white font-semibold">{displayName}</span></span>
+              </button>
               <button
                 onClick={async () => {
                   setIsLoggingOut(true);
@@ -162,6 +174,14 @@ const AdminLayout = ({ children }) => {
           <Footer />
         </main>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        user={user}
+        onNameUpdate={(newName) => setDisplayName(newName)}
+      />
     </div>
   );
 };

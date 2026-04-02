@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Footer from '@/components/Footer';
+import SettingsModal from '@/components/SettingsModal';
 import { FaHome, FaYoutube, FaMusic, FaSearch, FaFilm, FaMobileAlt, FaGlobe, FaShoppingBag, FaSignOutAlt } from 'react-icons/fa';
 
 const CreatorLayout = ({ children }) => {
@@ -13,12 +14,19 @@ const CreatorLayout = ({ children }) => {
   const pathname = usePathname();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const [displayName, setDisplayName] = React.useState(user?.name || '');
 
   React.useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Keep displayName in sync if user object updates
+  React.useEffect(() => {
+    if (user?.name) setDisplayName(user.name);
+  }, [user?.name]);
 
   const navItems = [
     { path: '/dashboard', icon: <FaHome />, label: 'Dashboard' },
@@ -49,13 +57,17 @@ const CreatorLayout = ({ children }) => {
 
             {/* User info + logout */}
             <div className="flex items-center gap-4">
-              {/* User Avatar Badge */}
-              <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-purple-500/20 rounded-full px-4 py-1.5">
+              {/* User Avatar Badge — click to open settings */}
+              <button
+                onClick={() => setSettingsOpen(true)}
+                title="Account Settings"
+                className="hidden sm:flex items-center gap-3 bg-white/5 border border-purple-500/20 rounded-full px-4 py-1.5 cursor-pointer hover:bg-white/10 hover:border-purple-500/40 transition-all duration-200"
+              >
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xs font-bold text-white">
-                  {user?.name?.charAt(0)?.toUpperCase() || 'C'}
+                  {displayName?.charAt(0)?.toUpperCase() || 'C'}
                 </div>
-                <span className="text-gray-300 text-sm">Welcome, <span className="text-white font-semibold">{user?.name}</span></span>
-              </div>
+                <span className="text-gray-300 text-sm">Welcome, <span className="text-white font-semibold">{displayName}</span></span>
+              </button>
               <button
                 onClick={async () => {
                   setIsLoggingOut(true);
@@ -137,6 +149,14 @@ const CreatorLayout = ({ children }) => {
           <Footer />
         </main>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        user={user}
+        onNameUpdate={(newName) => setDisplayName(newName)}
+      />
     </div>
   );
 };

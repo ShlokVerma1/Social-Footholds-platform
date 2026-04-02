@@ -123,6 +123,15 @@ export const AuthProvider = ({ children }) => {
     return data
   }
 
+  const updateProfile = async ({ name }) => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ name })
+      .eq('id', user.id)
+    if (error) throw error
+    setUser(prev => ({ ...prev, name }))
+  }
+
   const logout = async () => {
     try {
       await supabase.auth.signOut()
@@ -135,7 +144,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )
