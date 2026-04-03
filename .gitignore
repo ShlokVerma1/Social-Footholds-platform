@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════
 # ROOT .gitignore — Social Footholds
-# Covers both /backend (Python) and /frontend-next (Next.js)
+# Covers the frontend-next (Next.js) project
 # ═══════════════════════════════════════════════════
 
 # ── OS FILES ──────────────────────────────────────
@@ -19,19 +19,6 @@ Thumbs.db
 .env
 .env.*
 !.env.example
-
-# ── PYTHON / BACKEND ─────────────────────────────
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-*.egg-info/
-dist/
-build/
-venv/
-.venv/
-env/
-.Python
 
 # ── NODE / FRONTEND ──────────────────────────────
 node_modules/
