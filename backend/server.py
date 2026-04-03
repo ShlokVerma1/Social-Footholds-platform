@@ -15,15 +15,24 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# Supabase connection
-SUPABASE_URL = os.environ['SUPABASE_URL']
-SUPABASE_SERVICE_KEY = os.environ['SUPABASE_SERVICE_KEY']
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-
-# Stripe
-stripe.api_key = os.environ['STRIPE_SECRET_KEY']
+# Environment Variables
+SUPABASE_URL = os.environ.get('SUPABASE_URL')
+SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+
+# Initialize clients only if credentials exist
+supabase: Client = None
+if SUPABASE_URL and SUPABASE_SERVICE_KEY:
+    try:
+        supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    except Exception as e:
+        print(f"Error initializing Supabase: {e}")
+
+# Stripe
+if STRIPE_SECRET_KEY:
+    stripe.api_key = STRIPE_SECRET_KEY
 
 # Security
 security = HTTPBearer()
