@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { createClient } from '@/lib/supabase';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const API = '/api';
 
 // Create axios instance with token handling
 const api = axios.create({
