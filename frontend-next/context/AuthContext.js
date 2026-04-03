@@ -16,22 +16,25 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        if (session?.user) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('name, role')
-            .eq('id', session.user.id)
-            .single()
-            
-          setUser({
-            id: session.user.id,
-            email: session.user.email,
-            name: profile?.name || '',
-            role: profile?.role || 'creator'
-          })
+        const { data: { user: authUser }, error } = await supabase.auth.getUser()
+
+        if (!authUser || error) {
+          setLoading(false)
+          return
         }
+
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name, role')
+          .eq('id', authUser.id)
+          .single()
+
+        setUser({
+          id: authUser.id,
+          email: authUser.email,
+          name: profile?.name || '',
+          role: profile?.role || 'creator'
+        })
       } catch (error) {
         console.error('Error in initAuth:', error)
       } finally {
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }) => {
             .select('name, role')
             .eq('id', session.user.id)
             .single()
-            
+
           setUser({
             id: session.user.id,
             email: session.user.email,
@@ -72,14 +75,14 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
-    
+
     if (data?.user) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('name, role')
         .eq('id', data.user.id)
         .single()
-        
+
       setUser({
         id: data.user.id,
         email: data.user.email,
@@ -87,7 +90,7 @@ export const AuthProvider = ({ children }) => {
         role: profile?.role || 'creator'
       })
     }
-    
+
     return data
   }
 
@@ -95,23 +98,22 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { 
-        data: { name } 
+      options: {
+        data: { name }
       }
     })
-    
+
     if (error) throw error
-    
-    // Wait 500ms for trigger to create profile
+
     await new Promise(resolve => setTimeout(resolve, 500))
-    
+
     if (data?.user) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('name, role')
         .eq('id', data.user.id)
         .single()
-        
+
       setUser({
         id: data.user.id,
         email: data.user.email,
@@ -119,7 +121,7 @@ export const AuthProvider = ({ children }) => {
         role: profile?.role || 'creator'
       })
     }
-    
+
     return data
   }
 
