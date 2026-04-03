@@ -73,5 +73,7 @@ export async function authenticateAdmin() {
     throw new Error('Forbidden')
   }
 
-  return { supabase, user }
+  // Return the service_role client as 'supabase' so admin endpoints bypass RLS
+  const adminClient = createAdminClient()
+  return { supabase: adminClient, user, normalClient: supabase }
 }
