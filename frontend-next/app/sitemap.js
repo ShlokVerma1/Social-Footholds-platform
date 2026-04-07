@@ -44,7 +44,7 @@ export default async function sitemap() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     );
     const { data: blogs } = await supabase
-      .table('blogs')
+      .from('blogs')
       .select('id, updated_at')
       .eq('published', true);
 

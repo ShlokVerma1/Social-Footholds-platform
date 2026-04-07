@@ -9,6 +9,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -33,7 +34,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await register(email, password, name);
+      await register(email, password, name, phone);
       router.push('/dashboard');
     } catch (err) {
       console.error("Registration error:", err);
@@ -84,6 +85,19 @@ const Register = () => {
                 className="w-full bg-white/10 border border-purple-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-purple-500"
                 placeholder="your@email.com"
                 data-testid="register-email-input"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-300 mb-2">Phone Number</label>
+              <input
+                type="tel"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full bg-white/10 border border-purple-500/30 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-purple-500"
+                placeholder="+91 98765 43210"
+                data-testid="register-phone-input"
               />
             </div>
 

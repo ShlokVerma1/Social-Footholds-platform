@@ -212,9 +212,7 @@ const LandingPage = () => {
                       <h3 className="text-4xl sm:text-5xl font-bold text-white mb-2">
                         <CountUp 
                           end={stat.end} 
-                          duration={stat.end === 25000 ? 2.5 : 2} 
-                          enableScrollSpy 
-                          scrollSpyOnce 
+                          duration={1.2} 
                           suffix={stat.suffix} 
                           separator="," 
                         />

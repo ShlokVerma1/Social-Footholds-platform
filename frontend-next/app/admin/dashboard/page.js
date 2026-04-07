@@ -112,8 +112,12 @@ const AdminDashboard = () => {
       border: 'border-purple-500/20',
       glow: 'hover:shadow-[0_0_35px_rgba(168,85,247,0.2)]',
       bar: 'from-purple-500 to-violet-500',
-      extra: null,
-      subtext: null,
+      extra: (
+        <div className="flex items-center gap-1 text-emerald-400 text-xs font-semibold">
+          <FaArrowUp className="text-[9px]" /><span>+{stats.orders_this_week}</span>
+        </div>
+      ),
+      subtext: `${stats.orders_this_week} new this week`,
       testId: 'total-orders',
     },
     {
@@ -144,8 +148,12 @@ const AdminDashboard = () => {
       border: 'border-emerald-500/20',
       glow: 'hover:shadow-[0_0_35px_rgba(16,185,129,0.2)]',
       bar: 'from-emerald-500 to-teal-500',
-      extra: null,
-      subtext: null,
+      extra: (
+        <div className="flex items-center gap-1 text-emerald-400 text-xs font-semibold">
+          <FaArrowUp className="text-[9px]" /><span>+${stats.revenue_this_week}</span>
+        </div>
+      ),
+      subtext: `$${stats.revenue_this_week} earned this week`,
       testId: 'total-revenue',
       isCurrency: true,
     },
@@ -277,10 +285,53 @@ const AdminDashboard = () => {
         </div>
 
         {/* ── BOTTOM TWO-COLUMN SECTION ─────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative z-10">
 
-          {/* Platform Overview */}
+          {/* Activity Feed (col-span-2) */}
           <motion.div
+            className="lg:col-span-2 service-card-border relative overflow-hidden backdrop-blur-xl p-7 rounded-3xl flex flex-col"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-cyan-500 to-transparent" />
+            <h2 className="text-2xl font-bold text-white mb-5 relative z-10 flex items-center gap-3">
+              <FaShoppingBag className="text-blue-400 text-xl" /> Recent Campaigns
+            </h2>
+            <div className="flex-1 space-y-3 overflow-y-auto pr-2 relative z-10">
+              {stats.recent_orders?.length > 0 ? stats.recent_orders.map((order, i) => (
+                <motion.div
+                  key={order.id}
+                  className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/[0.05] rounded-2xl hover:bg-white/[0.04] transition-colors"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 + i * 0.1 }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold flex-shrink-0">
+                      {order.profiles?.name?.[0]?.toUpperCase() || '?'}
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-semibold">{order.profiles?.name || 'Unknown User'}</p>
+                      <p className="text-gray-400 text-xs">{order.service_name}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-emerald-400 text-sm font-bold">+${Number(order.amount).toFixed(2)}</p>
+                    <p className="text-gray-500 text-[10px] uppercase font-semibold">{order.payment_status}</p>
+                  </div>
+                </motion.div>
+              )) : (
+                <div className="p-8 text-center text-gray-500 border border-white/5 border-dashed rounded-2xl">
+                  No recent orders available.
+                </div>
+              )}
+            </div>
+          </motion.div>
+
+          <div className="flex flex-col space-y-6">
+            {/* Platform Overview */}
+            <motion.div
             className="service-card-border relative overflow-hidden backdrop-blur-xl p-7 rounded-3xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -350,6 +401,7 @@ const AdminDashboard = () => {
               ))}
             </div>
           </motion.div>
+          </div>
         </div>
 
       </div>

@@ -20,28 +20,37 @@ export default function AdminLogin() {
     setLoading(true);
     setError('');
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      setError('Invalid email or password');
-      setLoading(false);
-      return;
-    }
-
-    if (data?.user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single();
-
-      if (profile?.role === 'admin') {
-        router.push('/admin/dashboard');
-      } else {
-        await supabase.auth.signOut();
-        setError('Access denied. Admins only.');
+      if (error) {
+        setError('Invalid email or password');
         setLoading(false);
+        return;
       }
+
+      if (data?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .single();
+
+        if (profile?.role === 'admin') {
+          router.push('/admin/dashboard');
+          // We don't setLoading(false) here to avoid a flicker before navigation
+          // but we will add a secondary safety timeout if it takes too long
+          setTimeout(() => setLoading(false), 5000);
+        } else {
+          await supabase.auth.signOut();
+          setError('Access denied. Admins only.');
+          setLoading(false);
+        }
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
+      setLoading(false);
     }
   };
 

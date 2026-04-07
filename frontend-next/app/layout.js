@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Syne, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import "./app.css";
 import { AuthProvider } from "@/context/AuthContext";
@@ -13,7 +13,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
 export const metadata = {
+  metadataBase: new URL('https://socialfootholds.com'),
   title: {
     default: 'Social Footholds — Grow Your Channel, Reach Millions',
     template: '%s | Social Footholds',
@@ -39,7 +52,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} ${spaceGrotesk.variable}`}>
       <body>
         <AuthProvider>
           <div className="min-h-screen flex flex-col">

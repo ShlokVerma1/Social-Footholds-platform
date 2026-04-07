@@ -3,37 +3,69 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FaYoutube, FaCheckCircle } from 'react-icons/fa';
+import { FaYoutube, FaCheckCircle, FaRocket, FaChartLine } from 'react-icons/fa';
 import CreatorLayout from '@/components/CreatorLayout';
 import ServicePageShell from '@/components/service/ServicePageShell';
 import VideoDashboardPanel from '@/components/service/panels/VideoDashboardPanel';
+import MonitorGrowthTab from '@/components/service/MonitorGrowthTab';
 import { serviceAPI, pricingAPI, orderAPI } from '@/lib/api';
+
+const SERVICE_NAME = 'Video Promotion';
+
+const MILESTONES = [
+  { label: 'Order Received', icon: '📋' },
+  { label: 'Content Review', icon: '🔍' },
+  { label: 'Campaign Setup', icon: '⚙️' },
+  { label: 'Campaign Live', icon: '🚀' },
+  { label: 'Results Delivered', icon: '📊' },
+  { label: 'Completed', icon: '✅' },
+];
+
+const STATUS_BADGE = {
+  pending:    'bg-amber-500/10 border-amber-500/30 text-amber-400',
+  processing: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
+  completed:  'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+  cancelled:  'bg-red-500/10 border-red-500/30 text-red-400',
+};
+const PAYMENT_BADGE = {
+  paid:    'bg-emerald-500/10 border-emerald-500/30 text-emerald-400',
+  pending: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400',
+};
+
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'; }
+function shortId(id = '') { return String(id).slice(0, 8); }
+
+
 
 const VideoPromotion = () => {
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState('new');
   const [service, setService] = useState(null);
   const [videoUrl, setVideoUrl] = useState('');
   const [targetViews, setTargetViews] = useState(10000);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { fetchService(); }, []);
-  useEffect(() => { if (service && targetViews > 0) calculatePrice(); }, [targetViews, service]);
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const response = await serviceAPI.getAll();
+        const videoService = response.data.find(s => s.name === 'Video Promotion');
+        setService(videoService);
+      } catch (error) { console.error('Error fetching service:', error); }
+    };
+    fetchService();
+  }, []);
 
-  const fetchService = async () => {
-    try {
-      const response = await serviceAPI.getAll();
-      const videoService = response.data.find(s => s.name === 'Video Promotion');
-      setService(videoService);
-    } catch (error) { console.error('Error fetching service:', error); }
-  };
-
-  const calculatePrice = async () => {
-    try {
-      const response = await pricingAPI.calculate({ service_id: service.id, details: { views: targetViews } });
-      setCalculatedPrice(response.data.amount);
-    } catch (error) { console.error('Error calculating price:', error); }
-  };
+  useEffect(() => {
+    const calculatePrice = async () => {
+      try {
+        const response = await pricingAPI.calculate({ service_id: service.id, details: { views: targetViews } });
+        setCalculatedPrice(response.data.amount);
+      } catch (error) { console.error('Error calculating price:', error); }
+    };
+    if (service && targetViews > 0) calculatePrice();
+  }, [targetViews, service]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +90,6 @@ const VideoPromotion = () => {
     </CreatorLayout>
   );
 
-  // ── Why-choose bullets (all exact original text preserved) ──
   const bullets = [
     <><strong>Organic Growth:</strong> 100% real viewers from targeted demographics - no bots or fake engagement</>,
     <><strong>Geography Targeting:</strong> Reach audiences in specific countries and regions that match your content</>,
@@ -69,7 +100,6 @@ const VideoPromotion = () => {
 
   return (
     <CreatorLayout>
-      {/* ServicePageShell: red/orange accent for Video Promotion */}
       <ServicePageShell
         title="Video Promotion"
         description={service.description}
@@ -80,115 +110,127 @@ const VideoPromotion = () => {
         badge="Live Service" badgeDot="bg-emerald-400"
         rightPanel={<VideoDashboardPanel />}
       >
-        {/* ── WHY-CHOOSE SECTION ────────────────────── */}
-        <motion.div
-          className="service-card-border relative overflow-hidden backdrop-blur-xl p-6 rounded-3xl mb-8"
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          {/* Top accent line */}
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-orange-500 to-transparent" />
-          <h2 className="text-2xl font-bold text-white mb-5">Why Choose Video Promotion?</h2>
-          <ul className="space-y-3">
-            {bullets.map((text, i) => (
-              <motion.li
-                key={i}
-                initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.35, delay: 0.2 + i * 0.07 }}
-                className="flex items-start gap-4 bg-white/[0.03] border border-white/[0.06]
-                  hover:border-red-500/20 rounded-xl p-3 transition-all duration-200"
-              >
-                {/* Numbered badge */}
-                <div className="w-7 h-7 rounded-lg bg-red-500/20 border border-red-500/30
-                  flex items-center justify-center flex-shrink-0 text-xs font-bold text-red-300">
-                  {i + 1}
-                </div>
-                <span className="text-gray-300 leading-relaxed text-sm">{text}</span>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
+        {/* ── TAB BAR ── */}
+        <div className="flex gap-3 mb-8">
+          <button
+            onClick={() => setActiveTab('new')}
+            className={`flex items-center gap-2 px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-200
+              ${activeTab === 'new' ? 'bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.35)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
+            data-testid="tab-new-campaign"
+          >
+            <FaRocket className="text-xs" /> New Campaign
+          </button>
+          <button
+            onClick={() => setActiveTab('monitor')}
+            className={`flex items-center gap-2 px-6 py-2 rounded-lg font-semibold text-sm transition-all duration-200
+              ${activeTab === 'monitor' ? 'bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.35)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
+            data-testid="tab-monitor-growth"
+          >
+            <FaChartLine className="text-xs" /> Monitor Growth
+          </button>
+        </div>
 
-        {/* ── ORDER FORM ────────────────────────────── */}
-        <motion.div
-          className="service-card-border relative overflow-hidden backdrop-blur-xl p-8 rounded-3xl"
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-        >
-          {/* Micro-grid inside form card */}
-          <div className="absolute inset-0 opacity-[0.025] pointer-events-none rounded-3xl"
-            style={{
-              backgroundImage: 'linear-gradient(rgba(168,85,247,1) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,1) 1px,transparent 1px)',
-              backgroundSize: '20px 20px',
-            }}
+        {activeTab === 'monitor' ? (
+          <MonitorGrowthTab
+            serviceName={SERVICE_NAME}
+            milestones={MILESTONES}
+            accentGradient="from-red-500 via-orange-500 to-transparent"
+            onSwitchToNew={() => setActiveTab('new')}
           />
-          <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-            {/* Video URL */}
-            <div>
-              <label className="block text-gray-300 mb-2 text-sm font-medium">Video URL</label>
-              <input type="url" required value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-                className="form-input-glow w-full bg-white/5 border border-purple-500/30 text-white px-4 py-3 rounded-xl focus:outline-none"
-                data-testid="video-url-input"
-              />
-            </div>
-
-            {/* Target Views */}
-            <div>
-              <label className="block text-gray-300 mb-2 text-sm font-medium">Target Views</label>
-              <input type="number" required min="1000" step="1000" value={targetViews}
-                onChange={(e) => setTargetViews(parseInt(e.target.value))}
-                className="form-input-glow w-full bg-white/5 border border-purple-500/30 text-white px-4 py-3 rounded-xl focus:outline-none"
-                data-testid="target-views-input"
-              />
-              <p className="text-gray-500 text-xs mt-2">Minimum 1,000 views</p>
-            </div>
-
-            {/* Price display — premium glow card */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-red-900/40 to-orange-900/30
-              border border-red-500/30 p-6 rounded-2xl shadow-[0_0_25px_rgba(239,68,68,0.1)]">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500" />
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-gray-300 mb-1 text-sm">Estimated Cost</p>
-                  <p className="text-xs text-gray-500">{targetViews.toLocaleString()} views</p>
-                </div>
-                <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400"
-                  data-testid="calculated-price">
-                  ${calculatedPrice.toFixed(2)}
-                </p>
-              </div>
-            </div>
-
-            {/* Features list — glass chip rows */}
-            <div>
-              <h3 className="text-white font-semibold mb-4 text-sm">What's Included:</h3>
-              <ul className="space-y-2">
-                {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-3 bg-white/[0.03] border border-white/[0.05]
-                    rounded-xl p-3 hover:border-green-500/20 transition-colors duration-200">
-                    <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <FaCheckCircle className="text-green-400 text-xs" />
+        ) : (
+          <>
+            {/* ── WHY-CHOOSE SECTION ── */}
+            <motion.div
+              className="service-card-border relative overflow-hidden backdrop-blur-xl p-6 rounded-3xl mb-8"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-orange-500 to-transparent" />
+              <h2 className="text-2xl font-bold text-white mb-5">Why Choose Video Promotion?</h2>
+              <ul className="space-y-3">
+                {bullets.map((text, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.35, delay: 0.2 + i * 0.07 }}
+                    className="flex items-start gap-4 bg-white/[0.03] border border-white/[0.06] hover:border-red-500/20 rounded-xl p-3 transition-all duration-200"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-red-500/20 border border-red-500/30 flex items-center justify-center flex-shrink-0 text-xs font-bold text-red-300">
+                      {i + 1}
                     </div>
-                    <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
-                  </li>
+                    <span className="text-gray-300 leading-relaxed text-sm">{text}</span>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
 
-            {/* Submit button */}
-            <motion.button type="submit" disabled={loading}
-              whileTap={{ scale: 0.97 }}
-              className="btn-shimmer w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white
-                px-8 py-4 rounded-xl text-lg font-semibold
-                hover:shadow-[0_0_40px_rgba(168,85,247,0.5)] transition disabled:opacity-50"
-              data-testid="submit-order-button"
+            {/* ── ORDER FORM ── */}
+            <motion.div
+              className="service-card-border relative overflow-hidden backdrop-blur-xl p-8 rounded-3xl"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
             >
-              {loading ? 'Creating Order...' : 'Proceed to Payment'}
-            </motion.button>
-          </form>
-        </motion.div>
+              <div className="absolute inset-0 opacity-[0.025] pointer-events-none rounded-3xl"
+                style={{
+                  backgroundImage: 'linear-gradient(rgba(168,85,247,1) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,1) 1px,transparent 1px)',
+                  backgroundSize: '20px 20px',
+                }}
+              />
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div>
+                  <label className="block text-gray-300 mb-2 text-sm font-medium">Video URL</label>
+                  <input type="url" required value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="https://youtube.com/watch?v=..."
+                    className="form-input-glow w-full bg-white/5 border border-purple-500/30 text-white px-4 py-3 rounded-xl focus:outline-none"
+                    data-testid="video-url-input"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-300 mb-2 text-sm font-medium">Target Views</label>
+                  <input type="number" required min="1000" step="1000" value={targetViews}
+                    onChange={(e) => setTargetViews(parseInt(e.target.value))}
+                    className="form-input-glow w-full bg-white/5 border border-purple-500/30 text-white px-4 py-3 rounded-xl focus:outline-none"
+                    data-testid="target-views-input"
+                  />
+                  <p className="text-gray-500 text-xs mt-2">Minimum 1,000 views</p>
+                </div>
+                <div className="relative overflow-hidden bg-gradient-to-r from-red-900/40 to-orange-900/30 border border-red-500/30 p-6 rounded-2xl shadow-[0_0_25px_rgba(239,68,68,0.1)]">
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500" />
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-300 mb-1 text-sm">Estimated Cost</p>
+                      <p className="text-xs text-gray-500">{targetViews.toLocaleString()} views</p>
+                    </div>
+                    <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400" data-testid="calculated-price">
+                      ${calculatedPrice.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold mb-4 text-sm">What's Included:</h3>
+                  <ul className="space-y-2">
+                    {service.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3 bg-white/[0.03] border border-white/[0.05] rounded-xl p-3 hover:border-green-500/20 transition-colors duration-200">
+                        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <FaCheckCircle className="text-green-400 text-xs" />
+                        </div>
+                        <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <motion.button type="submit" disabled={loading}
+                  whileTap={{ scale: 0.97 }}
+                  className="btn-shimmer w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-[0_0_40px_rgba(168,85,247,0.5)] transition disabled:opacity-50"
+                  data-testid="submit-order-button"
+                >
+                  {loading ? 'Creating Order...' : 'Proceed to Payment'}
+                </motion.button>
+              </form>
+            </motion.div>
+          </>
+        )}
       </ServicePageShell>
     </CreatorLayout>
   );

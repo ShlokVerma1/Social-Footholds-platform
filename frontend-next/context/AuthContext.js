@@ -23,17 +23,31 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
-        const { data: profile } = await supabase
+        // Robust profile fetch: select only known safe columns first or handle failure
+        let { data: profileData, error: profileError } = await supabase
           .from('profiles')
-          .select('name, role')
+          .select('name, role, phone')
           .eq('id', authUser.id)
-          .single()
+          .limit(1)
+
+        // Fallback if 'phone' column is missing or query fails
+        if (profileError || !profileData?.length) {
+          const { data: fbData } = await supabase
+            .from('profiles')
+            .select('name, role')
+            .eq('id', authUser.id)
+            .limit(1)
+          profileData = fbData
+        }
+
+        const profile = profileData?.[0] || null
 
         setUser({
           id: authUser.id,
           email: authUser.email,
           name: profile?.name || '',
-          role: profile?.role || 'creator'
+          role: profile?.role || 'creator',
+          phone: profile?.phone || ''
         })
       } catch (error) {
         console.error('Error in initAuth:', error)
@@ -47,17 +61,29 @@ export const AuthProvider = ({ children }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         try {
-          const { data: profile } = await supabase
+          let { data: profileData, error: profileError } = await supabase
             .from('profiles')
-            .select('name, role')
+            .select('name, role, phone')
             .eq('id', session.user.id)
-            .single()
+            .limit(1)
+
+          if (profileError || !profileData?.length) {
+            const { data: fbData } = await supabase
+              .from('profiles')
+              .select('name, role')
+              .eq('id', session.user.id)
+              .limit(1)
+            profileData = fbData
+          }
+
+          const profile = profileData?.[0] || null
 
           setUser({
             id: session.user.id,
             email: session.user.email,
             name: profile?.name || '',
-            role: profile?.role || 'creator'
+            role: profile?.role || 'creator',
+            phone: profile?.phone || ''
           })
         } catch (error) {
           console.error('Error fetching profile on auth change:', error)
@@ -77,29 +103,41 @@ export const AuthProvider = ({ children }) => {
     if (error) throw error
 
     if (data?.user) {
-      const { data: profile } = await supabase
+      let { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('name, role')
+        .select('name, role, phone')
         .eq('id', data.user.id)
-        .single()
+        .limit(1)
+
+      if (profileError || !profileData?.length) {
+        const { data: fbData } = await supabase
+          .from('profiles')
+          .select('name, role')
+          .eq('id', data.user.id)
+          .limit(1)
+        profileData = fbData
+      }
+
+      const profile = profileData?.[0] || null
 
       setUser({
         id: data.user.id,
         email: data.user.email,
         name: profile?.name || '',
-        role: profile?.role || 'creator'
+        role: profile?.role || 'creator',
+        phone: profile?.phone || ''
       })
     }
 
     return data
   }
 
-  const register = async (email, password, name) => {
+  const register = async (email, password, name, phone) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { name }
+        data: { name, phone }
       }
     })
 
@@ -108,30 +146,52 @@ export const AuthProvider = ({ children }) => {
     await new Promise(resolve => setTimeout(resolve, 500))
 
     if (data?.user) {
-      const { data: profile } = await supabase
+      if (phone) {
+        await supabase
+          .from('profiles')
+          .update({ phone })
+          .eq('id', data.user.id)
+      }
+
+      let { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('name, role')
+        .select('name, role, phone')
         .eq('id', data.user.id)
-        .single()
+        .limit(1)
+
+      if (profileError || !profileData?.length) {
+        const { data: fbData } = await supabase
+          .from('profiles')
+          .select('name, role')
+          .eq('id', data.user.id)
+          .limit(1)
+        profileData = fbData
+      }
+
+      const profile = profileData?.[0] || null
 
       setUser({
         id: data.user.id,
         email: data.user.email,
         name: profile?.name || name || '',
-        role: profile?.role || 'creator'
+        role: profile?.role || 'creator',
+        phone: profile?.phone || phone || ''
       })
     }
 
     return data
   }
 
-  const updateProfile = async ({ name }) => {
+  const updateProfile = async ({ name, phone }) => {
+    const updates = {}
+    if (name !== undefined) updates.name = name
+    if (phone !== undefined) updates.phone = phone
     const { error } = await supabase
       .from('profiles')
-      .update({ name })
+      .update(updates)
       .eq('id', user.id)
     if (error) throw error
-    setUser(prev => ({ ...prev, name }))
+    setUser(prev => ({ ...prev, ...updates }))
   }
 
   const logout = async () => {
