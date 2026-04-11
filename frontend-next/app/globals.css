@@ -203,7 +203,7 @@ code {
   100% { transform: rotateY(-360deg); }
 }
 .carousel-spin {
-  animation: rotate3d 25s linear infinite;
+  animation: rotate3d 8s linear infinite;
 }
 .carousel-spin:hover {
   animation-play-state: paused;

@@ -146,7 +146,7 @@ const Contact = () => {
                   <FaMapMarkerAlt className="text-purple-400 text-xl mt-1" />
                   <div>
                     <p className="text-gray-400 text-sm">Address</p>
-                    <p className="text-white">Content will be added soon</p>
+                    <p className="text-white">117 South Lexington Street Ste 100<br />Harrisonville, MO 64701</p>
                   </div>
                 </div>
               </div>
