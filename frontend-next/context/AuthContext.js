@@ -23,22 +23,11 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
-        // Robust profile fetch: select only known safe columns first or handle failure
-        let { data: profileData, error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
-          .select('name, role, phone')
+          .select('*')
           .eq('id', authUser.id)
           .limit(1)
-
-        // Fallback if 'phone' column is missing or query fails
-        if (profileError || !profileData?.length) {
-          const { data: fbData } = await supabase
-            .from('profiles')
-            .select('name, role')
-            .eq('id', authUser.id)
-            .limit(1)
-          profileData = fbData
-        }
 
         const profile = profileData?.[0] || null
 
@@ -61,20 +50,11 @@ export const AuthProvider = ({ children }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         try {
-          let { data: profileData, error: profileError } = await supabase
+          const { data: profileData, error: profileError } = await supabase
             .from('profiles')
-            .select('name, role, phone')
+            .select('*')
             .eq('id', session.user.id)
             .limit(1)
-
-          if (profileError || !profileData?.length) {
-            const { data: fbData } = await supabase
-              .from('profiles')
-              .select('name, role')
-              .eq('id', session.user.id)
-              .limit(1)
-            profileData = fbData
-          }
 
           const profile = profileData?.[0] || null
 
@@ -103,20 +83,11 @@ export const AuthProvider = ({ children }) => {
     if (error) throw error
 
     if (data?.user) {
-      let { data: profileData, error: profileError } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('name, role, phone')
+        .select('*')
         .eq('id', data.user.id)
         .limit(1)
-
-      if (profileError || !profileData?.length) {
-        const { data: fbData } = await supabase
-          .from('profiles')
-          .select('name, role')
-          .eq('id', data.user.id)
-          .limit(1)
-        profileData = fbData
-      }
 
       const profile = profileData?.[0] || null
 
@@ -153,20 +124,11 @@ export const AuthProvider = ({ children }) => {
           .eq('id', data.user.id)
       }
 
-      let { data: profileData, error: profileError } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
-        .select('name, role, phone')
+        .select('*')
         .eq('id', data.user.id)
         .limit(1)
-
-      if (profileError || !profileData?.length) {
-        const { data: fbData } = await supabase
-          .from('profiles')
-          .select('name, role')
-          .eq('id', data.user.id)
-          .limit(1)
-        profileData = fbData
-      }
 
       const profile = profileData?.[0] || null
 

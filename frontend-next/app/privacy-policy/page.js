@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
           <FaArrowLeft className="mr-2" /> Back to Home
         </Link>
         <h1 className="text-4xl font-bold text-white mb-4">Privacy Policy</h1>
-        <p className="text-gray-400 mb-8">Last Updated: [Add Date]</p>
+
         <div className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-purple-500/20 space-y-6">
           <div className="text-gray-300 space-y-4 leading-relaxed">
             <p>At Social Footholds, we value your privacy and are committed to protecting your personal information. We may collect basic details such as your name, email address, and content or channel links to deliver our services effectively. This information is used strictly for service delivery, communication, and improving your experience.</p>

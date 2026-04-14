@@ -20,7 +20,7 @@ const TermsConditions = () => {
           <FaArrowLeft className="mr-2" /> Back to Home
         </Link>
         <h1 className="text-4xl font-bold text-white mb-4">Terms & Conditions</h1>
-        <p className="text-gray-400 mb-8">Last Updated: [Add Date]</p>
+
         <div className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-purple-500/20 space-y-6">
           <div className="text-gray-300 space-y-4 leading-relaxed">
             <p>By using Social Footholds, you agree to our terms of service. We provide growth and promotion services for creators across platforms such as YouTube and Spotify, focusing on increasing reach, audience, and visibility through organic and platform-compliant methods.</p>

@@ -118,16 +118,23 @@ export default function SupportHub() {
                 Email Us
               </a>
             </div>
-            <div className="bg-white/5 border border-purple-500/20 p-4 rounded-xl inline-block mt-auto w-fit">
-              <p className="text-gray-400 text-sm">
-                Email: <a href="mailto:team@socialfootholds.com" className="text-purple-400 hover:text-purple-300 font-semibold ml-1">team@socialfootholds.com</a>
-              </p>
-            </div>
-            <div className="bg-white/5 border border-purple-500/20 p-4 rounded-xl inline-block w-fit">
-              <p className="text-gray-400 text-sm flex items-start gap-2">
-                <span className="text-purple-400 mt-0.5">📍</span>
-                <span>117 South Lexington Street Ste 100<br />Harrisonville, MO 64701</span>
-              </p>
+            <div className="flex flex-col gap-4 mt-auto">
+              <div className="bg-white/5 border border-purple-500/20 p-4 rounded-xl inline-block w-fit">
+                <p className="text-gray-400 text-sm">
+                  Email: <a href="mailto:team@socialfootholds.com" className="text-purple-400 hover:text-purple-300 font-semibold ml-1">team@socialfootholds.com</a>
+                </p>
+              </div>
+              <div className="bg-white/5 border border-purple-500/20 p-4 rounded-xl inline-block w-fit">
+                <p className="text-gray-400 text-sm">
+                  Phone: <a href="tel:+18162590198" className="text-purple-400 hover:text-purple-300 font-semibold ml-1">+1 816-259-0198</a>
+                </p>
+              </div>
+              <div className="bg-white/5 border border-purple-500/20 p-4 rounded-xl inline-block w-fit">
+                <p className="text-gray-400 text-sm flex items-start gap-2">
+                  <span className="text-purple-400 mt-0.5">📍</span>
+                  <span>117 South Lexington Street Ste 100<br />Harrisonville, MO 64701</span>
+                </p>
+              </div>
             </div>
           </div>
 
