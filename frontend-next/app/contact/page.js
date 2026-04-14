@@ -61,7 +61,7 @@ const Contact = () => {
             
             {enquirySubmitted && (
               <div className="bg-green-500/20 border border-green-500 text-green-300 p-4 rounded-lg mb-6">
-                ✓ Thank you! We'll get back to you soon.
+                ✓ Message received! We will contact you after our team reviews it.
               </div>
             )}
 
@@ -132,14 +132,14 @@ const Contact = () => {
                   <FaEnvelope className="text-purple-400 text-xl mt-1" />
                   <div>
                     <p className="text-gray-400 text-sm">Email</p>
-                    <p className="text-white">Content will be added soon</p>
+                    <p className="text-white">team@socialfootholds.com</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <FaPhone className="text-purple-400 text-xl mt-1" />
                   <div>
                     <p className="text-gray-400 text-sm">Phone</p>
-                    <p className="text-white">Content will be added soon</p>
+                    <p className="text-white">+1 816-259-0198</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -155,7 +155,7 @@ const Contact = () => {
             <div className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-purple-500/20">
               <h3 className="text-xl font-bold text-white mb-4">Business Hours</h3>
               <div className="space-y-2 text-gray-300">
-                <p>Content will be added soon</p>
+                <p>Monday - Friday: 9:00 AM - 6:00 PM EST</p>
               </div>
             </div>
           </div>

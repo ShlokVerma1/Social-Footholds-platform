@@ -145,7 +145,7 @@ export default function SupportHub() {
 
             {enquirySubmitted && (
               <div className="bg-green-500/20 border border-green-500 text-green-300 p-4 rounded-lg mb-6 text-center">
-                ✓ Thank you! We'll get back to you soon.
+                ✓ Message received! We will contact you after our team reviews it.
               </div>
             )}
 
