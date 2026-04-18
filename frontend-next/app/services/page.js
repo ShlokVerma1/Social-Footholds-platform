@@ -43,7 +43,7 @@ export default function ServicesPage() {
                 </div>
                 
                 <p className="text-gray-400 mb-8 flex-grow leading-relaxed">
-                  {service.description}
+                  {service.detailedDescription}
                 </p>
                 
                 <ul className="space-y-4 mb-8">
