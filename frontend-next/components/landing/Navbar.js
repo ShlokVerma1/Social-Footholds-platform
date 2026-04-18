@@ -35,9 +35,12 @@ export default function Navbar() {
             <Link href="/" className="text-gray-300 hover:text-white transition">
               Home
             </Link>
-            <a href="#services" className="text-gray-300 hover:text-white transition">
-              Products
-            </a>
+            <Link href="/services" className="text-gray-300 hover:text-white transition">
+              Services
+            </Link>
+            <Link href="/portfolio" className="text-gray-300 hover:text-white transition">
+              Portfolio
+            </Link>
             <a href="#contact" className="text-gray-300 hover:text-white transition">
               Contact Us
             </a>
@@ -70,9 +73,12 @@ export default function Navbar() {
             <Link href="/" className="block text-gray-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>
               Home
             </Link>
-            <a href="#services" className="block text-gray-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>
-              Products
-            </a>
+            <Link href="/services" className="block text-gray-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>
+              Services
+            </Link>
+            <Link href="/portfolio" className="block text-gray-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>
+              Portfolio
+            </Link>
             <a href="#contact" className="block text-gray-300 hover:text-white transition py-2" onClick={() => setMobileMenuOpen(false)}>
               Contact Us
             </a>

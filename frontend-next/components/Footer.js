@@ -39,9 +39,12 @@ const Footer = ({ isRoot }) => {
               <Link href="/" className="block text-gray-400 hover:text-white transition text-sm">
                 Home
               </Link>
-              <a href="#services" className="block text-gray-400 hover:text-white transition text-sm">
-                Products
-              </a>
+              <Link href="/services" className="block text-gray-400 hover:text-white transition text-sm">
+                Services
+              </Link>
+              <Link href="/portfolio" className="block text-gray-400 hover:text-white transition text-sm">
+                Portfolio
+              </Link>
               <Link href="/blogs" className="block text-gray-400 hover:text-white transition text-sm">
                 Blog
               </Link>
@@ -76,7 +79,7 @@ const Footer = ({ isRoot }) => {
 
         {/* Copyright */}
         <div className="border-t border-purple-500/20 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; 2025 Social Footholds. All rights reserved.</p>
+          <p>&copy; 2025 Social Foothold LLC. All rights reserved.</p>
         </div>
       </div>
     </footer>

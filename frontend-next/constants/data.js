@@ -41,7 +41,7 @@ export const servicesData = [
 
 export const faqData = [
   { q: '1. Is your promotion safe for my YouTube channel or music profile?', a: 'Yes. We use organic and platform-compliant strategies. No bots, no fake engagement.' },
-  { q: '2. Do you guarantee results?', a: 'We guarantee a minimum level of growth and visibility based on the selected service. Our focus is on delivering real audience reach and measurable improvements.' },
+  { q: '2. What kind of results can I expect?', a: 'We strive to deliver a minimum level of growth and visibility based on the selected service. Our focus is on delivering real audience reach and measurable improvements.' },
   { q: '3. How long does it take to see results?', a: 'Most creators start seeing results within 3–14 days, depending on the service.' },
   { q: '4. How do I get started?', a: "Simply choose a service, complete payment, and submit your channel or music link. We'll take care of the rest." },
   { q: '5. Can I track my progress?', a: 'Yes. You will receive updates, reports, and progress tracking throughout your service.' },
