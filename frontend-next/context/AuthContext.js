@@ -82,23 +82,25 @@ export const AuthProvider = ({ children }) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
 
-    if (data?.user) {
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .limit(1)
+    const user = data?.user
+    if (!user) throw new Error('Authentication failed. Please try again.')
 
-      const profile = profileData?.[0] || null
+    // Fetch profile (safe — never throws on missing row)
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .limit(1)
 
-      setUser({
-        id: data.user.id,
-        email: data.user.email,
-        name: profile?.name || '',
-        role: profile?.role || 'creator',
-        phone: profile?.phone || ''
-      })
-    }
+    const profile = profileData?.[0] || null
+
+    setUser({
+      id: user.id,
+      email: user.email,
+      name: profile?.name || '',
+      role: profile?.role || 'creator',
+      phone: profile?.phone || ''
+    })
 
     return data
   }
