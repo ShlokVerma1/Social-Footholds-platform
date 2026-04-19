@@ -22,8 +22,8 @@ const CancellationRefund = () => {
         <h1 className="text-4xl font-bold text-white mb-4">Cancellation & Refund Policy</h1>
         <div className="bg-white/5 backdrop-blur-md p-8 rounded-2xl border border-purple-500/20 space-y-6">
           <div className="text-gray-300 space-y-4 leading-relaxed">
-            <p>At Social Footholds, we aim to maintain fairness and transparency in our services. Orders can be cancelled within 7 days of purchase, provided the service has not been fully completed. If the service has not started or is in early stages, a full refund may be issued upon request.</p>
-            <p>Once a service has been fully delivered, refunds are not applicable. In cases where partial work has been completed, a partial refund may be considered based on the extent of work done. Refund requests based on change of mind or dissatisfaction without valid reasoning will not be accepted.</p>
+            <p>At Social Foothold LLC, we are committed to fairness and transparency. Cancellation requests submitted within 7 days of purchase will be reviewed, provided the service has not been fully completed. Where a service has not yet started or is in its early stages, a refund may be issued at our discretion upon request.</p>
+            <p>Once a service has been fully delivered, refunds are not applicable. Where partial work has been completed, a partial refund may be considered based on the extent of work done. Refund requests based solely on change of mind, without documented service failure, will not be eligible for review.</p>
             <p>All approved refunds are processed within 5 to 10 business days. By purchasing our services, you agree to this refund policy.</p>
           </div>
         </div>

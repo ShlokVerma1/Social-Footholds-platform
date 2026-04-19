@@ -18,7 +18,7 @@ const steps = [
   {
     icon: <FaChartLine className="text-4xl text-green-400" />,
     title: 'How It Works',
-    desc: 'You submit your link. We audit, strategize, and run organic promotion. No bots — only real, platform-compliant engagement. Results in 3–14 days.',
+    desc: 'You submit your link. We audit, strategize, and run organic promotion. No bots — only real, platform-compliant engagement. Most campaigns show measurable progress within 3–14 days.',
   },
 ];
 
@@ -109,8 +109,7 @@ export default function BusinessExplanation() {
               video editing and YouTube Shorts creation from long-form footage.
             </p>
             <p>
-              Social Foothold LLC is trusted by more than 25,000 creators worldwide, with
-              campaigns delivering measurable results within 3 to 14 days of launch.
+              Social Foothold LLC is trusted by creators and businesses worldwide, with campaigns designed to deliver measurable growth through ethical, platform-compliant promotion strategies.
             </p>
           </article>
         </div>

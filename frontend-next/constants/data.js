@@ -100,6 +100,6 @@ export const faqData = [
   },
   {
     q: '8. Can I cancel my order?',
-    a: 'Yes. You can request a cancellation within 7 days of placing your order for a full refund, provided the campaign has not yet launched. Once a campaign is live, partial refunds may apply based on work completed.',
+    a: 'Cancellation requests can be submitted within 7 days of placing your order, provided the campaign has not yet launched. Approved cancellations may be eligible for a refund based on work completed at the time of the request. Once a campaign is live, partial refunds may be considered on a case-by-case basis.',
   },
 ];
